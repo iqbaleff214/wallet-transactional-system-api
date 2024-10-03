@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   get 'users', to: 'users#index'
+  get 'teams', to: 'teams#index'
+  get 'stocks', to: 'stocks#index'
 
   post 'login', to: 'sessions#create'
   post 'logout', to: 'sessions#destroy'

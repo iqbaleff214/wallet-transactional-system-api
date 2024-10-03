@@ -15,14 +15,4 @@ class User < ApplicationRecord
     save!
     auth_token
   end
-
-  def wallet_id
-    wallet&.id
-  end
-
-  private
-
-  def create_wallet
-    Wallet.create(walletable: self)
-  end
 end
