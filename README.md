@@ -13,3 +13,119 @@
 3. Use STI (or any other design pattern) for proper money manipulation
 4. Apply your own sign in (new session solution, no sign up is needed) without any external gem
 5. Create a LatestStockPrice library (in lib folder in “gem style”) for “price”, “prices” and “price_all” endpoints - https://rapidapi.com/suneetk92/api/latest-stock-price
+
+### Instruction
+1. Clone this repository
+2. Install dependency
+    ```shell
+    bundle install
+    ```
+3. Create the database
+    ```shell
+    rails db:create && rails db:migrate
+    ```
+4. Add credential
+    ```shell
+    EDITOR="nano" rails credentials:edit
+    ```
+    Add this line:
+    ```yaml
+    rapidapi:
+        api_key: YOUR_RAPIDAPI_KEY
+    ```
+5. Start the server
+    ```shell
+    rails server
+    ```
+
+### Endpoint
+
+#### Login
+- POST `/login`
+    - Body
+        | Field | Required |
+        | ---- | -- |
+        | email | yes |
+        | password | yes |
+
+- POST `/logout`
+    - Header
+        | Field | Required | Value |
+        | ----- | -------- | ------ |
+        | Authorization | yes | `token` from `/login` |
+
+- GET `/users`
+    - Header
+        | Field | Required | Value |
+        | ----- | -------- | ------ |
+        | Authorization | yes | `token` from `/login` |
+
+- GET `/teams`
+    - Header
+        | Field | Required | Value |
+        | ----- | -------- | ------ |
+        | Authorization | yes | `token` from `/login` |
+
+- GET `/stocks`
+    - Header
+        | Field | Required | Value |
+        | ----- | -------- | ------ |
+        | Authorization | yes | `token` from `/login` |
+
+- GET `/stocks/price_all`
+    - Header
+        | Field | Required | Value |
+        | ----- | -------- | ------ |
+        | Authorization | yes | `token` from `/login` |
+
+- GET `/wallet/:source_wallet_id`
+    - Header
+        | Field | Required | Value |
+        | ----- | -------- | ------ |
+        | Authorization | yes | `token` from `/login` |
+
+- GET `/transaction/:source_wallet_id/debit`
+    - Header
+        | Field | Required | Value |
+        | ----- | -------- | ------ |
+        | Authorization | yes | `token` from `/login` |
+
+- GET `/transaction/:source_wallet_id/credit`
+    - Header
+        | Field | Required | Value |
+        | ----- | -------- | ------ |
+        | Authorization | yes | `token` from `/login` |
+
+- POST `/transaction/credit`
+    - Header
+        | Field | Required | Value |
+        | ----- | -------- | ------ |
+        | Authorization | yes | `token` from `/login` |
+    - Body
+        | Field | Required |
+        | ---- | -- |
+        | source_wallet_id | yes |
+        | amount | yes |
+
+- POST `/transaction/debit`
+    - Header
+        | Field | Required | Value |
+        | ----- | -------- | ------ |
+        | Authorization | yes | `token` from `/login` |
+    - Body
+        | Field | Required |
+        | ---- | -- |
+        | source_wallet_id | yes |
+        | amount | yes |
+
+- POST `/transaction/transfer`
+    - Header
+        | Field | Required | Value |
+        | ----- | -------- | ------ |
+        | Authorization | yes | `token` from `/login` |
+    - Body
+        | Field | Required |
+        | ---- | -- |
+        | source_wallet_id | yes |
+        | target_wallet_id | yes |
+        | amount | yes |
