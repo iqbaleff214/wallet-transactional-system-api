@@ -12,5 +12,15 @@ class StocksController < ApplicationController
     render json: {
       data: stocks.as_json(only: [:name, :quantity, :price], methods: [:wallet_id, :current_balance])
     }, status: :ok
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { error: e.message }, status: :unprocessable_entity
+  end
+
+  def show_price_all
+    stock_price_service = LatestStockPrice.new
+    all_prices = stock_price_service.price_all
+    render json: all_prices, status: :ok
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 end

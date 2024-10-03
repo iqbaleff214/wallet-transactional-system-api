@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   get 'teams', to: 'teams#index'
   get 'stocks', to: 'stocks#index'
 
+  get 'stocks/price_all', to: 'stocks#show_price_all'
+
   get 'wallet/:source_wallet_id', to: 'transactions#show'
   get 'transaction/:source_wallet_id/debit', to: 'transactions#debit_history'
   get 'transaction/:source_wallet_id/credit', to: 'transactions#credit_history'
