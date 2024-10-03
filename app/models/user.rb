@@ -16,6 +16,10 @@ class User < ApplicationRecord
     auth_token
   end
 
+  def wallet_id
+    wallet&.id
+  end
+
   private
 
   def create_wallet
