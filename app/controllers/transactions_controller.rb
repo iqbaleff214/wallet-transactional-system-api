@@ -1,8 +1,8 @@
 class TransactionsController < ApplicationController
   before_action :authenticate_request
   before_action :validate_amount, only: [:debit, :credit, :transfer]
-  before_action :validate_source_wallet
-  before_action :validate_target_wallet, only: [:debit, :credit, :transfer]
+  before_action :validate_source_wallet, except: [:credit]
+  before_action :validate_target_wallet, only: [:transfer, :credit]
 
   def show
     wallet = Wallet.find(params[:source_wallet_id])
@@ -16,7 +16,7 @@ class TransactionsController < ApplicationController
   def debit_history
     wallet = Wallet.find(params[:source_wallet_id])
     transactions = wallet.transactions_as_source
-    render json: { transactions: transactions }, status: :ok
+    render json: { data: transactions }, status: :ok
   rescue ActiveRecord::RecordInvalid => e
     render json: { error: e.message }, status: :unprocessable_entity
   end
@@ -24,7 +24,7 @@ class TransactionsController < ApplicationController
   def credit_history
     wallet = Wallet.find(params[:source_wallet_id])
     transactions = wallet.transactions_as_target
-    render json: { transactions: transactions }, status: :ok
+    render json: { data: transactions }, status: :ok
   rescue ActiveRecord::RecordInvalid => e
     render json: { error: e.message }, status: :unprocessable_entity
   end
@@ -55,7 +55,7 @@ class TransactionsController < ApplicationController
   end
 
   def credit
-    wallet = Wallet.find(params[:source_wallet_id])
+    wallet = Wallet.find(params[:target_wallet_id])
     amount = params[:amount].to_i
 
     ActiveRecord::Base.transaction do

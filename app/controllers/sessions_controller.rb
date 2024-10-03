@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  before_action :authenticate_request, only: [:show, :debit_history, :credit_history, :debit, :credit, :transfer]
+  before_action :authenticate_request, only: [:show, :destroy, :debit_history, :credit_history, :debit, :credit, :transfer]
   before_action :validate_amount, only: [:debit, :credit, :transfer]
 
   # Login

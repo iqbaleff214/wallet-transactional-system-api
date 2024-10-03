@@ -19,7 +19,9 @@ class StocksController < ApplicationController
   def show_price_all
     stock_price_service = LatestStockPrice.new
     all_prices = stock_price_service.price_all
-    render json: all_prices, status: :ok
+    render json: {
+      data: all_prices
+    }, status: :ok
   rescue ActiveRecord::RecordInvalid => e
     render json: { error: e.message }, status: :unprocessable_entity
   end
