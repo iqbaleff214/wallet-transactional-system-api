@@ -31,7 +31,7 @@ class TransactionsController < ApplicationController
     end
 
     ActiveRecord::Base.transaction do
-      Transaction.create!(
+      Debit.create!(
         source_wallet: wallet,
         target_wallet: nil,
         amount: amount,
@@ -51,7 +51,7 @@ class TransactionsController < ApplicationController
     amount = params[:amount].to_i
 
     ActiveRecord::Base.transaction do
-      Transaction.create!(
+      Credit.create!(
         source_wallet: nil,
         target_wallet: wallet,
         amount: amount,
@@ -82,7 +82,7 @@ class TransactionsController < ApplicationController
     end
 
     ActiveRecord::Base.transaction do
-      Transaction.create!(
+      Transfer.create!(
         source_wallet: source_wallet,
         target_wallet: target_wallet,
         amount: amount,
