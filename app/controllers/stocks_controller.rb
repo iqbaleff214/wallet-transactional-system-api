@@ -10,7 +10,7 @@ class StocksController < ApplicationController
     end
 
     render json: {
-      data: stocks.as_json(only: [:name, :quantity, :price], methods: :wallet_id)
+      data: stocks.as_json(only: [:name, :quantity, :price], methods: [:wallet_id, :current_balance])
     }, status: :ok
   end
 end

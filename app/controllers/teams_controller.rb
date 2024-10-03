@@ -10,7 +10,7 @@ class TeamsController < ApplicationController
     end
 
     render json: {
-      data: teams.as_json(only: [:name], methods: :wallet_id)
+      data: teams.as_json(only: [:name], methods: [:wallet_id, :current_balance])
     }, status: :ok
   end
 end

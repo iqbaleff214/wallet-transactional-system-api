@@ -10,7 +10,7 @@ class UsersController < ApplicationController
     end
 
     render json: {
-      data: users.as_json(only: [:name, :email], methods: :wallet_id)
+      data: users.as_json(only: [:name, :email], methods: [:wallet_id, :current_balance])
     }, status: :ok
   end
 end

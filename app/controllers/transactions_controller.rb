@@ -1,28 +1,36 @@
 class TransactionsController < ApplicationController
   before_action :authenticate_request
   before_action :validate_amount, only: [:debit, :credit, :transfer]
+  before_action :validate_source_wallet
+  before_action :validate_target_wallet, only: [:debit, :credit, :transfer]
 
   def show
-    wallet = @current_user.wallet
+    wallet = Wallet.find(params[:source_wallet_id])
     render json: {
       data: wallet.as_json(only: [:id, :balance, :created_at, :updated_at]),
     }, status: :ok
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   def debit_history
-    wallet = @current_user.wallet
+    wallet = Wallet.find(params[:source_wallet_id])
     transactions = wallet.transactions_as_source
     render json: { transactions: transactions }, status: :ok
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   def credit_history
-    wallet = @current_user.wallet
+    wallet = Wallet.find(params[:source_wallet_id])
     transactions = wallet.transactions_as_target
     render json: { transactions: transactions }, status: :ok
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   def debit
-    wallet = @current_user.wallet
+    wallet = Wallet.find(params[:source_wallet_id])
     amount = params[:amount].to_i
 
     if wallet.balance < amount
@@ -47,7 +55,7 @@ class TransactionsController < ApplicationController
   end
 
   def credit
-    wallet = @current_user.wallet
+    wallet = Wallet.find(params[:source_wallet_id])
     amount = params[:amount].to_i
 
     ActiveRecord::Base.transaction do
@@ -67,8 +75,8 @@ class TransactionsController < ApplicationController
   end
 
   def transfer
-    source_wallet = @current_user.wallet
-    target_wallet = Wallet.find(params[:wallet_id])
+    source_wallet = Wallet.find(params[:source_wallet_id])
+    target_wallet = Wallet.find(params[:target_wallet_id])
     amount = params[:amount].to_i
 
     if source_wallet.id == target_wallet.id
@@ -106,5 +114,13 @@ class TransactionsController < ApplicationController
     elsif params[:amount].to_i <= 0
       render json: { error: "Amount must be greater than 0" }, status: :unprocessable_entity
     end
+  end
+
+  def validate_source_wallet
+    render json: { error: "source_wallet_id is required" }, status: :bad_request if params[:source_wallet_id].blank?
+  end
+
+  def validate_target_wallet
+    render json: { error: "target_wallet_id is required" }, status: :bad_request if params[:target_wallet_id].blank?
   end
 end
