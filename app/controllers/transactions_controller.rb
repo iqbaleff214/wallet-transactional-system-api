@@ -5,9 +5,20 @@ class TransactionsController < ApplicationController
   def show
     wallet = @current_user.wallet
     render json: {
-      status: 'OK',
       data: wallet.as_json(only: [:id, :balance, :created_at, :updated_at]),
-    }
+    }, status: :ok
+  end
+
+  def debit_history
+    wallet = @current_user.wallet
+    transactions = wallet.transactions_as_source
+    render json: { transactions: transactions }, status: :ok
+  end
+
+  def credit_history
+    wallet = @current_user.wallet
+    transactions = wallet.transactions_as_target
+    render json: { transactions: transactions }, status: :ok
   end
 
   def debit
